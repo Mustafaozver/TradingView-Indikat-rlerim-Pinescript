@@ -1,0 +1,37 @@
+//@version=3
+//created by Tuncer Þengöz @TuncerSengoz on twitter
+//author KývanÇ @fr3762 on twitter
+
+study("Isolated Peak and Bottom", overlay=true, shorttitle="ISOPB")
+
+//izole dip - Isolated Bottom
+d02=low
+d12=low[1]
+izdip2=low[2]
+d32=low[3]
+d42=low[4]
+h32=high[3]
+h22=high[2]
+
+//izole tepe - Isolated Peak
+t02=high
+t12=high[1]
+iztepe2=high[2]
+t32=high[3]
+t42=high[4]
+L32=low[3]
+L22=low[2]
+
+
+
+izotepe1=iff((iztepe2>t02 and iztepe2>t12 and iztepe2>t32 and iztepe2>t42 and low[1]>min(L32,L22) and low<min(L32,L22)),-1,na)
+izotepe2=iff(t12>t02 and t12>iztepe2 and t12>t32 and low<min(L22,low[1]),-2,na)
+
+izodip1=iff((izdip2<d02 and izdip2<d12 and izdip2<d32 and izdip2<d42 and high[1]<max(h32,h22) and high>max(h32,h22)),1,na)
+izodip2=iff(d12<d02 and d12<izdip2 and d12<d32 and high>max(h22,high[1]),1,na)
+
+
+plotarrow(izotepe1, colordown=blue, offset = -2, transp=60)
+plotarrow(izotepe2, colordown=blue, offset = -1, transp=60)
+plotarrow(izodip1, colorup=purple, offset = -2, transp=40)
+plotarrow(izodip2, colorup=purple, offset = -1, transp=40)

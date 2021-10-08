@@ -1,0 +1,59 @@
+//@version=4
+study("No-lose trading targets (Based on Tom DeMark Sequential) By Mustafa ÖZVER", "NLTT_TDSEQ", overlay=true)
+ref = input(close)
+PSeq = 0
+NSeq = 0
+var line U_AREA_LINE = na
+var line D_AREA_LINE = na
+count_limit = 9
+BUY__AREA = 0
+SELL_AREA = 0
+
+if (change(ref,4) > 0)
+    PSeq := nz(PSeq[1]+1,0)
+    NSeq := 0
+
+if (change(ref,4) < 0)
+    NSeq := nz(NSeq[1]+1,0)
+    PSeq := 0
+
+BUY__SIGNAL = NSeq == count_limit ? 1 : 0
+SELL_SIGNAL = PSeq == count_limit ? 1 : 0
+
+U_AREA_ = min(open,close,ohlc4,hlc3,hl2)
+D_AREA_ = max(open,close,ohlc4,hlc3,hl2)
+
+U_AREA = U_AREA_
+D_AREA = D_AREA_
+
+BUY__AREA := nz(BUY__SIGNAL[1],0) == 1 ? 1 : (nz(BUY__AREA[1],0) == 1 ? 1 : 0)
+SELL_AREA := nz(SELL_SIGNAL[1],0) == 1 ? 1 : (nz(SELL_AREA[1],0) == 1 ? 1 : 0)
+
+U_AREA := SELL_AREA == 1 ? nz(U_AREA[1],U_AREA_) : U_AREA_
+D_AREA := BUY__AREA == 1 ? nz(D_AREA[1],D_AREA_) : D_AREA_
+
+refLine = plot(ref,color=#00000000,display=display.none,offset=1)
+D_Line = plot(D_AREA,color=BUY__AREA==1?#00FF00A0:#00000000,linewidth=1,offset=2)
+U_Line = plot(U_AREA,color=SELL_AREA==1?#FF0000A0:#00000000,linewidth=1,offset=2)
+
+//if (U_AREA < close)
+//    line.set_x2(U_AREA_LINE,bar_index)
+
+//if (D_AREA > close)
+//    line.set_x2(D_AREA_LINE,bar_index)
+
+if (U_AREA > close or BUY__SIGNAL == 1)
+    SELL_AREA := 0
+
+if (D_AREA < close or SELL_SIGNAL == 1)
+    BUY__AREA := 0
+
+if (SELL_AREA == 0 and SELL_SIGNAL == 1)
+    U_AREA_LINE := line.new(bar_index, U_AREA, bar_index+5, U_AREA, xloc.bar_index, extend.none, #FF0000A0, line.style_solid, 3)
+
+if (BUY__AREA == 0 and BUY__SIGNAL == 1)
+    D_AREA_LINE := line.new(bar_index, D_AREA, bar_index+5, D_AREA, xloc.bar_index, extend.none, #00FF00A0, line.style_solid, 3)
+
+fill(D_Line, refLine, color=BUY__AREA==1?#00FF0020:#00000000)
+fill(U_Line, refLine, color=SELL_AREA==1?#FF000020:#00000000)
+

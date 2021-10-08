@@ -1,0 +1,18 @@
+//@version=3
+// author KývanÇ @fr3762 on twitter
+//
+
+study("Hareketli Ortalama COMBO", overlay=true, shorttitle="MAVCOMBO")
+src = input(title="Source", type=source, defval=close)
+
+length1 = input(10, "MOV Length1")
+plot(sma(src, length1), color=red, linewidth=1, title="MOV1")
+
+length2 = input(50, "MOV Length2")
+plot(sma(src, length2), color=blue, linewidth=2, title="MOV2")
+
+length3 = input(100, "MOV Length3")
+plot(sma(src, length3), color=orange, linewidth=3, title="MOV3")
+
+length4 = input(200, "MOV Length4")
+plot(sma(src, length4), color=black, linewidth=2, title="MOV4")

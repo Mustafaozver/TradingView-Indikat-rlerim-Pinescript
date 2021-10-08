@@ -1,0 +1,33 @@
+//@version=3
+//CREATOR: DR.YASAR ERDINC @yerdinc65 twitter
+//AUTHOR: KIVANC @fr3762 twitter
+study("TKE")
+period = input(14,title="period",type=integer,minval=1,maxval=500)
+emaperiod = input(5, title="EMAperiod", type=integer, minval=1, maxval=500)
+EMA = input(false, title="Show EMA Line?")
+momentum=(close/close [period]) * 100
+cci=cci(hlc3,period)
+rsi=rsi(close,period)
+willr=(highest(high,period)-close)/(highest(high,period)-lowest(low,period)) * -100
+stosk=stoch(close,high,low,period)
+upper_s = sum(volume * (change(hlc3) <= 0 ? 0 : hlc3), period)
+lower_s = sum(volume * (change(hlc3) >= 0 ? 0 : hlc3), period)
+mfi= rsi(upper_s, lower_s)
+spacing = input(7)
+length7 = input(7, minval=1), length14 = input(14, minval=1), length28 = input(28, minval=1)
+average(bp, tr_, length) => sum(bp, length) / sum(tr_, length)
+high_ = max(high, close[1])
+low_ = min(low, close[1])
+bp = close - low_
+tr_ = high_ - low_
+avg7 = average(bp, tr_, length7)
+avg14 = average(bp, tr_, length14)
+avg28 = average(bp, tr_, length28)
+ult= 100 * (4*avg7 + 2*avg14 + avg28)/7
+TKEline=(ult+mfi+momentum+cci+rsi+willr+stosk)/7
+EMAline= ema(TKEline,emaperiod)
+plot(EMA and EMAline ? EMAline : na, title="EMA Line", style=line, linewidth = 2, color=blue)
+plot(TKEline, color=red, linewidth=3, title="TKE")
+plot(20, color=blue, linewidth=0, title="")
+plot(80, color=red, linewidth=0, title="")
+plot(0, color=purple, linewidth=0, title="")

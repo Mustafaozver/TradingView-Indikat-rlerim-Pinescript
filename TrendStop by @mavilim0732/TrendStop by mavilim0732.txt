@@ -1,0 +1,27 @@
+//@version=3
+
+//author KývanÇ @fr3762 on twitter
+//creator @mavilim0732 on twitter
+
+
+study("TrendStop", overlay=true)
+
+
+pr1=input(21, "EMA period")
+pr2=input(2, "normal/vwap", minval=1, maxval=2)
+len = input(14, title="DIRECTIONAL IND. Length")
+up = change(high)
+down = -change(low)
+truerange = rma(tr, len)
+plus = fixnan(100 * rma(up > down and up > 0 ? up : 0, len) / truerange)
+minus = fixnan(100 * rma(down > up and down > 0 ? down : 0, len) / truerange)
+M1=ema(close,pr2)
+MACDfastLength = input(12)
+MACDslowlength = input(26)
+MACD = ema(close, MACDfastLength) - ema(close, MACDslowlength)
+K1=iff(pr2<2, M1, sum(close*volume, pr1)/sum(volume, pr1))
+K2=valuewhen(MACD>0 and plus>minus, K1, 0)
+K3=K2*0.975
+
+plot(K2, linewidth=2, color=green)
+plot(K3, linewidth=3, color=red, title="Stop")

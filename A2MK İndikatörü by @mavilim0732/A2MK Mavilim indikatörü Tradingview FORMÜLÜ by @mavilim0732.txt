@@ -1,0 +1,21 @@
+//@version=3
+
+//author KývanÇ @fr3762 on twitter
+//creator @mavilim0732 on twitter
+
+
+study("A2MK", shorttitle="A2MK")
+
+
+pr2=input(6, "Green EMA Length")
+pr1=input(10, "Yellow EMA Length")
+
+SR1=ema((max(close[1],high)+min(close[1],low))/2,pr1)
+
+k4=ema(highest(SR1,3),pr2)
+k5=ema(lowest(SR1,3),pr2)
+k1=SR1>k4
+k2=SR1<k5
+YSL=iff(k1, k5, k4)
+plot(YSL, linewidth=3, color=orange, title="Yellow")
+plot(SR1, linewidth=3, color=green, title="Green")

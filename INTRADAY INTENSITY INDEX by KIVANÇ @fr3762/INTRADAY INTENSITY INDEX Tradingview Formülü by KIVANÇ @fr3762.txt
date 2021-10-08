@@ -1,0 +1,13 @@
+//@version=3
+//developer: David Bostian
+//author: KIVANÇ @fr3762 on twitter
+study("INTRADAY INTENSITY INDEX", shorttitle="IIIX")
+length=input(21, "length", minval=1)
+K1=(2*close-high-low)*volume
+K2=iff(high!=low,high-low,1)
+INT=K1/K2
+INTSUM=sum(INT,length)
+coloff=iff(INTSUM>0,blue,red)
+plot(INTSUM, style=histogram,color=coloff, linewidth=6, title="INTSUM")
+plot(INT, title="INT")
+plot(0,color=black)

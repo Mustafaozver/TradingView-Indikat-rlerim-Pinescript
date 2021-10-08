@@ -1,0 +1,28 @@
+Inverse Fisher Transform COMBO STO+RSI+CCIv2 by KIVANÇ fr3762
+
+
+// author KIVANC @fr3762 on twitter
+// creator John EHLERS
+// 
+study("Inverse Fisher Transform COMBO", shorttitle="IFTCOMBO")
+STO = input(false, title="Show INVERSE FISHER TRANSFORM on STOCHASTIC Line?")
+RSI = input(false, title="Show INVERSE FISHER TRANSFORM on RSI Line?")
+CCI = input(true, title="Show INVERSE FISHER TRANSFORM on CCI Line?")
+ccilength=input(5, "CCI Length")
+wmalength=input(9, title="Smoothing Length")
+v11=0.1*(cci(close, ccilength)/4)
+v21=wma(v11, wmalength)
+INV1=(exp(2*v21)-1)/(exp(2*v21)+1)
+rsilength=input(5, "RSI Length")
+v12=0.1*(rsi(close, rsilength)-50)
+v22=wma(v12,wmalength)
+INV2=(exp(2*v22)-1)/(exp(2*v22)+1)
+stochlength=input(5, "STOCH Length")
+v1=0.1*(stoch(close, high, low, stochlength)-50)
+v2=wma(v1, wmalength)
+INVLine=(exp(2*v2)-1)/(exp(2*v2)+1)
+plot(STO and INVLine ? INVLine : na, color=blue, linewidth=1, title="STOCH")
+plot(CCI and INV1 ? INV1 : na, color=red, linewidth=3, title="CCIv2")
+plot(RSI and INV2 ? INV2 : na, color=black, linewidth=2, title="RSI")
+hline(0.5, color=red)
+hline(-0.5, color=green)

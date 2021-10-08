@@ -1,0 +1,4 @@
+//@version=3
+//trailing Stop Loss Indicator by KývanÇ fr3762
+study("trailing stop loss", overlay=true, scale=scale.right)
+plot(valuewhen(low>low[1] , low[1] , 1), linewidth=2, color=purple)

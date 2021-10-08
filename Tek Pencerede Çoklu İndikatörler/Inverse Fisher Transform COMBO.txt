@@ -1,0 +1,55 @@
+//@version=3
+// author: KIVANC @fr3762 on twitter
+// creator John EHLERS
+//
+//
+study("Inverse Fisher Transform COMBO", shorttitle="IFTCOMBO")
+mfilength=input(5, "MFI Length")
+wmalength=input(9, title="Smoothing length")
+source = hlc3
+// MFI
+up = sum(volume * (change(source) <= 0 ? 0 : source), mfilength)
+lo = sum(volume * (change(source) >= 0 ? 0 : source), mfilength)
+mfi = rsi(up, lo)
+v1=0.1*(mfi-50)
+v2=wma(v1, wmalength)
+INVMFI=(exp(2*v2)-1)/(exp(2*v2)+1)
+plot(INVMFI, color=purple, linewidth=2, title="MFI")
+hline(0.5, color=red)
+hline(-0.5, color=green)
+
+stochlength=input(5, "STOCH Length")
+v11=0.1*(stoch(close, high, low, stochlength)-50)
+v21=wma(v11, wmalength)
+INVSTO=(exp(2*v21)-1)/(exp(2*v21)+1)
+plot(INVSTO, color=blue, linewidth=2, title="STO")
+
+
+rsilength=input(5, "RSI Length")
+v12=0.1*(rsi(close, rsilength)-50)
+v22=wma(v12,wmalength)
+INVRSI=(exp(2*v22)-1)/(exp(2*v22)+1)
+plot(INVRSI, color=green, linewidth=2, title="RSI")
+
+ccilength=input(5, "CCI Length")
+v13=0.1*(cci(close, ccilength))
+v23=wma(v13, wmalength)
+INVCCI=(exp(2*v23)-1)/(exp(2*v23)+1)
+plot(INVCCI, color=red, linewidth=2, title="CCI")
+
+SMIL = input(5, "Stochastic Momentum length", minval=1)
+IEMA = input(3, "Inner EMA length", minval=1)
+OEMA = input(3, "Outer EMA length", minval=1)
+// SM calculation
+LLow = lowest (low, SMIL)
+HHigh = highest (high, SMIL)
+SM = close - 0.5*(HHigh+LLow)
+// SMI calculations
+avgsm = ema(ema(SM, IEMA), OEMA)
+diff = HHigh - LLow
+avgdiff = ema(ema(diff, IEMA), OEMA)
+SMI = avgdiff != 0 ? 100*(avgsm/(0.5*avgdiff)) : 0
+v14=0.1*(SMI)
+v24=wma(v14, wmalength)
+INVSMI=(exp(2*v24)-1)/(exp(2*v24)+1)
+plot(INVSMI, color=black, linewidth=2, title="SMI")
